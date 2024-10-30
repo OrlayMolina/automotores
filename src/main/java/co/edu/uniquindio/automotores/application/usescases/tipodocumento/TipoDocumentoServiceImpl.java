@@ -15,6 +15,6 @@ public class TipoDocumentoServiceImpl implements ITipoDocumentoUsesCases {
     private final JdbcTipoDocumentoRepository tipoDocumentoRepository;
     @Override
     public List<TipoDocumentoDTO> tipoDocumentos() {
-        return null;
+        return tipoDocumentoRepository.tipoDocumentos();
     }
 }
