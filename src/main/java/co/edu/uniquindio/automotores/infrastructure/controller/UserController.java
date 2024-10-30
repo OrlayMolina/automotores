@@ -26,7 +26,7 @@ public class UserController {
     public ResponseEntity<MensajeDTO<String>> crearCliente(@RequestBody ClienteDTO cliente) {
         try {
             clienteService.crearCliente(cliente);
-            return ResponseEntity.ok(new MensajeDTO<>(false, "Cuenta creada exitosamente"));
+            return ResponseEntity.ok(new MensajeDTO<>(false, "Cliente creado exitosamente"));
         } catch (AlreadyExistsException e){
             return ResponseEntity.status(CONFLICT).body(new MensajeDTO<>(true, e.getMessage()));
         }
