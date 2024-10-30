@@ -1,6 +1,8 @@
 package co.edu.uniquindio.automotores.infrastructure.adapters.repository;
 
 import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
+import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
+import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.automotores.domain.ports.in.cliente.IClienteUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.database.DatabaseConnection;
 import org.springframework.stereotype.Repository;
@@ -24,6 +26,11 @@ public class JdbcClienteRepository implements IClienteUsesCases {
 
     @Override
     public String crearCliente(ClienteDTO clienteDTO) {
+
+        if(obtenerCliente(clienteDTO.nro_documento()).isPresent()){
+            throw new AlreadyExistsException("El Cliente con nro de documento " + clienteDTO.nro_documento() + " ya existe!");
+        }
+
         String query = "INSERT INTO Cliente (nro_documento, tipo_documento, correo, " +
                 "primer_nombre, segundo_nombre, primer_apellido, segundo_apellido)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -42,11 +49,18 @@ public class JdbcClienteRepository implements IClienteUsesCases {
     }
 
     @Override
-    public String eliminarCliente(Long id) {
+    public String eliminarCliente(Long nro_documento) {
+
+        if(obtenerCliente(nro_documento).isEmpty()){
+            throw new ResourceNotFoundException("El Cliente con nro de documento " + nro_documento + " no fue encontrado!");
+        }
+
+        eliminarTelefonosCliente(nro_documento);
+
         String query = "DELETE FROM Cliente WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setLong(1, id);
+            stmt.setLong(1, nro_documento);
             int filasAfectadas = stmt.executeUpdate();
             if(filasAfectadas > 0){
                 return "El cliente fue eliminado correctamente.";
@@ -55,6 +69,19 @@ public class JdbcClienteRepository implements IClienteUsesCases {
             e.printStackTrace();
         }
         return "El cliente no pudo ser eliminado.";
+    }
+
+    @Override
+    public void eliminarTelefonosCliente(Long nro_documento){
+        String deleteTelefonoQuery = "DELETE FROM telefono_cliente WHERE cliente = ?";
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement stmtTelefono = connection.prepareStatement(deleteTelefonoQuery)) {
+
+            stmtTelefono.setLong(1, nro_documento);
+            stmtTelefono.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -88,11 +115,11 @@ public class JdbcClienteRepository implements IClienteUsesCases {
     }
 
     @Override
-    public Optional<ClienteDTO> obtenerCliente(Long id) {
+    public Optional<ClienteDTO> obtenerCliente(Long nro_documento) {
         String query = "SELECT * FROM Cliente WHERE nro_documento = ?";
         try(Connection connection = databaseConnection.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
+            statement.setLong(1, nro_documento);
             ResultSet result = statement.executeQuery();
             if (result.next()){
                 return Optional.of(mapResultSetToCliente(result));
@@ -125,7 +152,7 @@ public class JdbcClienteRepository implements IClienteUsesCases {
         return new ClienteDTO(
                 rs.getLong("nro_documento"),
                 rs.getLong("tipo_documento"),
-                rs.getString("correo_electronico"),
+                rs.getString("correo"),
                 rs.getString("primer_nombre"),
                 rs.getString("segundo_nombre"),
                 rs.getString("primer_apellido"),
