@@ -1,8 +1,10 @@
 package co.edu.uniquindio.automotores.infrastructure.controller;
 
 import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
+import co.edu.uniquindio.automotores.application.dto.empleado.EmpleadoDTO;
 import co.edu.uniquindio.automotores.application.dto.usuario.MensajeDTO;
 import co.edu.uniquindio.automotores.application.usescases.cliente.ClienteServiceImpl;
+import co.edu.uniquindio.automotores.application.usescases.empleado.EmpleadoServiceImpl;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class UserController {
 
     private final ClienteServiceImpl clienteService;
+    private final EmpleadoServiceImpl empleadoService;
 
     @PostMapping ("/clientes/crear-cliente")
     public ResponseEntity<MensajeDTO<String>> crearCliente(@RequestBody ClienteDTO cliente) {

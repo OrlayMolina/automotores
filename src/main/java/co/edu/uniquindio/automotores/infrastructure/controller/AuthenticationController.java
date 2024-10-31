@@ -47,7 +47,7 @@ public class AuthenticationController {
     public ResponseEntity<MensajeDTO<String>> crearCliente(@RequestBody EmpleadoDTO empleado) {
         try {
             empleadoService.crearEmpleado(empleado);
-            return ResponseEntity.ok(new MensajeDTO<>(false, "Cuenta creada exitosamente"));
+            return ResponseEntity.ok(new MensajeDTO<>(false, "Empleado creado exitosamente"));
         } catch (AlreadyExistsException e){
             return ResponseEntity.status(CONFLICT).body(new MensajeDTO<>(true, e.getMessage()));
         }

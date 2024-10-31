@@ -128,7 +128,7 @@ public class JdbcClienteRepository implements IClienteUsesCases {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

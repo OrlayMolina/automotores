@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmpleadoServiceImpl implements IEmpleadoUsesCases {
 
-    private JdbcEmpleadoRepository empleadoRepository;
+    private final JdbcEmpleadoRepository empleadoRepository;
     @Override
     public String crearEmpleado(EmpleadoDTO empleadoDTO) {
         return empleadoRepository.crearEmpleado(empleadoDTO);

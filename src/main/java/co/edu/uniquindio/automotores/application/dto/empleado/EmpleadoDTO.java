@@ -8,8 +8,5 @@ public record EmpleadoDTO(
         String primer_nombre,
         String segundo_nombre,
         String primer_apellido,
-        String segundo_apellido,
-        String correo,
-        String password,
-        String confirm_password) {
+        String segundo_apellido) {
 }
