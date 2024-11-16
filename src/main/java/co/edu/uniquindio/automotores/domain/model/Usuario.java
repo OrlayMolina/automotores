@@ -20,26 +20,32 @@ public class Usuario {
     }
 
     public Long getId() {
+
         return id;
     }
 
     public void setId(Long id) {
+
         this.id = id;
     }
 
     public Long getId_empleado() {
+
         return id_empleado;
     }
 
     public void setId_empleado(Long id_empleado) {
+
         this.id_empleado = id_empleado;
     }
 
     public String getCorreo() {
+
         return correo;
     }
 
     public void setCorreo(String correo) {
+
         this.correo = correo;
     }
 
