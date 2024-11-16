@@ -14,5 +14,8 @@ public interface IClienteUsesCases {
 
     String actualizarCliente(Long id, ClienteDTO clienteActualizado);
     Optional<ClienteDTO> obtenerCliente(Long id);
+
+    ClienteDTO obtenerUnCliente(Long nro_documento);
+
     List<ClienteDTO> clientes();
 }

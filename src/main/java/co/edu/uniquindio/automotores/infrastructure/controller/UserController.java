@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -36,9 +37,9 @@ public class UserController {
     }
 
     @DeleteMapping("/clientes/eliminar-cliente/{nro_documento}")
-    public ResponseEntity<MensajeDTO<String>> eliminarCliente(@PathVariable Long nro_documento){
+    public ResponseEntity<MensajeDTO<String>> eliminarCliente(@PathVariable String nro_documento){
         try {
-            String mensaje = clienteService.eliminarCliente(nro_documento);
+            String mensaje = clienteService.eliminarCliente(Long.valueOf(nro_documento));
             return ResponseEntity.ok(new MensajeDTO<>(false, mensaje));
         } catch(ResourceNotFoundException e){
             return ResponseEntity.status(NOT_FOUND).body(new MensajeDTO<>(true, e.getMessage()));
@@ -49,6 +50,22 @@ public class UserController {
     public ResponseEntity<MensajeDTO<List<ClienteDTO>>> obtenerClientes(){
         List<ClienteDTO> clientes = clienteService.clientes();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, clientes));
+    }
+
+    @GetMapping("/clientes/cliente/{nro_documento}")
+    public ResponseEntity<MensajeDTO<ClienteDTO>> obtenerCliente(@PathVariable String nro_documento){
+        ClienteDTO cliente = clienteService.obtenerUnCliente(Long.valueOf(nro_documento));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, cliente));
+    }
+
+    @PostMapping ("/clientes/actualizar-cliente/{nro_documento}")
+    public ResponseEntity<MensajeDTO<String>> actualizarCliente(@PathVariable String nro_documento, @RequestBody ClienteDTO cliente) {
+        try {
+            clienteService.actualizarCliente(Long.valueOf(nro_documento), cliente);
+            return ResponseEntity.ok(new MensajeDTO<>(false, "Cliente creado exitosamente"));
+        } catch (AlreadyExistsException e){
+            return ResponseEntity.status(CONFLICT).body(new MensajeDTO<>(true, e.getMessage()));
+        }
     }
 
 }

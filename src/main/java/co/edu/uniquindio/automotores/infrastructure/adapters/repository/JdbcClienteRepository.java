@@ -132,6 +132,12 @@ public class JdbcClienteRepository implements IClienteUsesCases {
     }
 
     @Override
+    public ClienteDTO obtenerUnCliente(Long nro_documento){
+        Optional<ClienteDTO> optCliente = obtenerCliente(nro_documento);
+        return optCliente.orElse(null);
+    }
+
+    @Override
     public List<ClienteDTO> clientes() {
         List<ClienteDTO> clientes = new ArrayList<>();
         String query = "SELECT * FROM Cliente";

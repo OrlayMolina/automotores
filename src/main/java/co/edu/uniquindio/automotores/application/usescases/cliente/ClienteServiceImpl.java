@@ -36,7 +36,7 @@ public class ClienteServiceImpl implements IClienteUsesCases {
 
     @Override
     public void eliminarTelefonosCliente(Long nro_documento) {
-
+        clienteRepository.eliminarTelefonosCliente(nro_documento);
     }
 
     @Override
@@ -47,6 +47,11 @@ public class ClienteServiceImpl implements IClienteUsesCases {
     @Override
     public Optional<ClienteDTO> obtenerCliente(Long nro_documento) {
         return clienteRepository.obtenerCliente(nro_documento);
+    }
+
+    @Override
+    public ClienteDTO obtenerUnCliente(Long nro_documento) {
+        return clienteRepository.obtenerUnCliente(nro_documento);
     }
 
     @Override
