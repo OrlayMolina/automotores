@@ -2,6 +2,8 @@ package co.edu.uniquindio.automotores.application.usescases.Servicio;
 
 import co.edu.uniquindio.automotores.application.dto.servicio.ServicioDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
+import co.edu.uniquindio.automotores.domain.ports.in.Servicio.IServicioUsesCases;
+import co.edu.uniquindio.automotores.infrastructure.adapters.repository.JdbcServicioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,17 +28,17 @@ public class ServicioServiceImpl implements IServicioUsesCases {
     }
 
     @Override
-    public String eliminarServicio(long id_servicio) {
+    public String eliminarServicio(Long id_servicio) {
         return servicioRepository.eliminarServicio(id_servicio);
     }
 
     @Override
-    public String actualizarServicio(long id_servicio, ServicioDTO servicioActualizado) {
+    public String actualizarServicio(Long id_servicio, ServicioDTO servicioActualizado) {
         return servicioRepository.actualizarServicio(id_servicio, servicioActualizado);
     }
 
     @Override
-    public Optional<ServicioDTO> obtenerServicio(long id_servicio) {
+    public Optional<ServicioDTO> obtenerServicio(Long id_servicio) {
         return servicioRepository.obtenerServicio(id_servicio);
     }
 
