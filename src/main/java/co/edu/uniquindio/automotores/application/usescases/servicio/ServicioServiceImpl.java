@@ -1,21 +1,20 @@
-package co.edu.uniquindio.automotores.application.usescases.Servicio;
+package co.edu.uniquindio.automotores.application.usescases.servicio;
 
 import co.edu.uniquindio.automotores.application.dto.servicio.ServicioDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.ports.in.Servicio.IServicioUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.repository.JdbcServicioRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ServicioServiceImpl implements IServicioUsesCases {
-    private final JdbcServicioRepository servicioRepository;
 
-    public ServicioServiceImpl(JdbcServicioRepository servicioRepository) {
-        this.servicioRepository = servicioRepository;
-    }
+    private final JdbcServicioRepository servicioRepository;
 
     @Override
     public String crearServicio(ServicioDTO servicio) {

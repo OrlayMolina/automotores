@@ -21,7 +21,7 @@ public class JdbcTipoVehiculoRepository implements ITipoVehiculoUsesCases {
 
     private final DatabaseConnection databaseConnection;
     @Override
-    public List<TipoVehiculoDTO> tipoVehiculoDTO() {
+    public List<TipoVehiculoDTO> tipoVehiculos() {
 
         List<TipoVehiculoDTO> listaTipoVehiculos = new ArrayList<>();
         String query = "SELECT * FROM tipo_Vehiculo";

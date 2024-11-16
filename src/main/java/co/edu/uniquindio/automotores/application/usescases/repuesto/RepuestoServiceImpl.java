@@ -1,12 +1,8 @@
-package co.edu.uniquindio.automotores.application.usescases.Repuesto;
+package co.edu.uniquindio.automotores.application.usescases.repuesto;
 
-import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
 import co.edu.uniquindio.automotores.application.dto.repuesto.RepuestoDTO;
-import co.edu.uniquindio.automotores.application.usescases.cliente.ClienteServiceImpl;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
-import co.edu.uniquindio.automotores.domain.ports.in.cliente.IClienteUsesCases;
 import co.edu.uniquindio.automotores.domain.ports.in.repuesto.IRepuestoUsesCases;
-import co.edu.uniquindio.automotores.infrastructure.adapters.repository.JdbcClienteRepository;
 import co.edu.uniquindio.automotores.infrastructure.adapters.repository.JdbcRepuestoRepository;
 import org.springframework.stereotype.Service;
 

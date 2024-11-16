@@ -5,6 +5,8 @@ import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.automotores.domain.ports.in.Servicio.IServicioUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.database.DatabaseConnection;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,14 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
+@RequiredArgsConstructor
 public class JdbcServicioRepository implements IServicioUsesCases {
 
     private final DatabaseConnection databaseConnection;
-
-    public JdbcServicioRepository(DatabaseConnection databaseConnection){
-        this.databaseConnection = databaseConnection;
-    }
-
+    
     @Override
     public String crearServicio(ServicioDTO servicioDTO) {
 
