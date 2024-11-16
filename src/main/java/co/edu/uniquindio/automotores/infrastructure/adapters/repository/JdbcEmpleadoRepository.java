@@ -3,6 +3,7 @@ package co.edu.uniquindio.automotores.infrastructure.adapters.repository;
 import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
 import co.edu.uniquindio.automotores.application.dto.empleado.EmpleadoDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
+import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.automotores.domain.ports.in.empleado.IEmpleadoUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.database.DatabaseConnection;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +48,24 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
 
     @Override
     public String eliminarEmpleado(Long nro_documento) {
-        return null;
-    }
 
+        if(obtenerEmpleado(nro_documento).isEmpty()){
+            throw new ResourceNotFoundException("El empleado con numero de documento: " + nro_documento + " no fue encontrado!");
+        }
+
+        String query = "DELETE FROM Empleado WHERE nro_documento = ?";
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, nro_documento);
+            int filasAfectadas = stmt.executeUpdate();
+            if(filasAfectadas > 0){
+                return "El Empleado fue eliminado correctamente.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "El Empleado no pudo ser eliminado.";
+    }
     @Override
     public void eliminarTelefonosEmpleado(Long nro_documento) {
 
@@ -56,9 +73,23 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
 
     @Override
     public String actualizarEmpleado(Long nro_documento, EmpleadoDTO empleadoActualizado) {
-        return null;
-    }
+        String query = "UPDATE Empleado SET  = ?, nro_documento = ?, tipo_documento = ?, cargo = ?, " +
+                "salario = ?, primer_nombre = ?, segundo_nombre = ? , primer_apellido = ?, segundo_apellido = ?WHERE nro_documento = ?";
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement sentencia = connection.prepareStatement(query)) {
 
+            atributosEmpleado(empleadoActualizado, sentencia);
+
+            sentencia.setLong(8, nro_documento);
+            int filasAfectadas = sentencia.executeUpdate();
+            if(filasAfectadas > 0){
+                return "El empleado fue actualizado correctamente.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "El Empleado no pudo ser actualizado.";
+    }
     @Override
     public Optional<EmpleadoDTO> obtenerEmpleado(Long nro_documento) {
         String query = "SELECT * FROM empleado WHERE nro_documento = ?";
@@ -78,7 +109,18 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
 
     @Override
     public List<EmpleadoDTO> empleados() {
-        return null;
+        List<EmpleadoDTO> empleados = new ArrayList<>();
+        String query = "SELECT * FROM Empleado";
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                empleados.add(mapResultSetToEmpleado(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados();
     }
 
     private void atributosEmpleado(EmpleadoDTO empleadoActualizado, PreparedStatement sentencia) throws SQLException {
