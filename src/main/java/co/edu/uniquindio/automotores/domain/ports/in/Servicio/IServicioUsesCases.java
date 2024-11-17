@@ -12,6 +12,7 @@ public interface IServicioUsesCases {
     String actualizarServicio(Long id_servicio, ServicioDTO servicioActualizado);
     Optional<ServicioDTO> obtenerServicio(Long id_service);
 
-    List<ServicioDTO> servicio ();
+    List<ServicioDTO> servicios();
 
+    ServicioDTO obtenerUnServicio(Long id_servicio);
 }

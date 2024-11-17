@@ -1,9 +1,11 @@
 package co.edu.uniquindio.automotores.infrastructure.controller;
 
 import co.edu.uniquindio.automotores.application.dto.empleado.TipoEmpleadoDTO;
+import co.edu.uniquindio.automotores.application.dto.tipoVehiculo.TipoVehiculoDTO;
 import co.edu.uniquindio.automotores.application.dto.tipodocumento.TipoDocumentoDTO;
 import co.edu.uniquindio.automotores.application.dto.usuario.MensajeDTO;
 import co.edu.uniquindio.automotores.application.usescases.empleado.TipoEmpleadoServiceImpl;
+import co.edu.uniquindio.automotores.application.usescases.tipoVehiculo.TipoVehiculoServiceImpl;
 import co.edu.uniquindio.automotores.application.usescases.tipodocumento.TipoDocumentoServiceImpl;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class PublicController {
 
     private final TipoDocumentoServiceImpl tipoDocumentoService;
+    private final TipoVehiculoServiceImpl tipoVehiculoService;
     private final TipoEmpleadoServiceImpl tipoEmpleadoService;
 
     @GetMapping("/tipos-documento")
@@ -31,6 +34,16 @@ public class PublicController {
             return ResponseEntity.ok(new MensajeDTO<>(false, tipos));
         } catch (ResourceNotFoundException e){
             return ResponseEntity.status(NOT_FOUND).body(new MensajeDTO<>(true, List.of(new TipoDocumentoDTO(1L, "", "Tipo de Documentos no encontrados!"))));
+        }
+    }
+
+    @GetMapping("/tipos-vehiculo")
+    public ResponseEntity<MensajeDTO<List<TipoVehiculoDTO>>> tipoVehiculos(){
+        try {
+            List<TipoVehiculoDTO> tipos = tipoVehiculoService.tipoVehiculos();
+            return ResponseEntity.ok(new MensajeDTO<>(false, tipos));
+        } catch (ResourceNotFoundException e){
+            return ResponseEntity.status(NOT_FOUND).body(new MensajeDTO<>(true, List.of(new TipoVehiculoDTO(1L,  "Tipo de Vehiculos no encontrados!"))));
         }
     }
 

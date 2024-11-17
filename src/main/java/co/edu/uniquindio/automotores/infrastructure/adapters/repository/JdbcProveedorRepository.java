@@ -1,12 +1,9 @@
 package co.edu.uniquindio.automotores.infrastructure.adapters.repository;
 
 import co.edu.uniquindio.automotores.application.dto.proveedor.ProveedorDTO;
-import co.edu.uniquindio.automotores.application.dto.repuesto.RepuestoDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
-import co.edu.uniquindio.automotores.domain.model.Proveedor;
 import co.edu.uniquindio.automotores.domain.ports.in.proveedor.IProveedorUsesCases;
-import co.edu.uniquindio.automotores.domain.ports.in.repuesto.IRepuestoUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.database.DatabaseConnection;
 import org.springframework.stereotype.Repository;
 
@@ -56,6 +53,8 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
         if(obtenerProveedor(nro_documento).isEmpty()){
             throw new ResourceNotFoundException("El proveedor con No. de documento: " + nro_documento + " no fue encontrado!");
         }
+
+        eliminarRepuestoProveeidos(nro_documento);
 
         String query = "DELETE FROM Proveedor WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
@@ -118,19 +117,37 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
     }
 
     @Override
-    public List<ProveedorDTO> proveedor() {
-        List<ProveedorDTO> repuesto = new ArrayList<>();
+    public List<ProveedorDTO> proveedores() {
+        List<ProveedorDTO> proveedores = new ArrayList<>();
         String query = "SELECT * FROM Proveedor";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                repuesto.add(mapResultSetToProveedor(rs));
+                proveedores.add(mapResultSetToProveedor(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return proveedor();
+        return proveedores;
+    }
+
+    @Override
+    public ProveedorDTO obtenerUnProveedor(Long nro_documento){
+        Optional<ProveedorDTO> optproveedor = obtenerProveedor(nro_documento);
+        return optproveedor.orElse(null);
+    }
+
+    @Override
+    public void eliminarRepuestoProveeidos(Long nro_documento){
+        String deleteRepuestosQuery = "DELETE FROM repuesto WHERE proveedor = ?";
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement stmtRepuesto = connection.prepareStatement(deleteRepuestosQuery)) {
+            stmtRepuesto.setLong(1, nro_documento);
+            stmtRepuesto.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private ProveedorDTO mapResultSetToProveedor(ResultSet rs) throws SQLException {

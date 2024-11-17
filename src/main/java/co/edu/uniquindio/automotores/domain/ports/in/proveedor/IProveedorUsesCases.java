@@ -12,7 +12,10 @@ public interface IProveedorUsesCases {
 
     String actualizarProveedor(Long nro_documento, ProveedorDTO proveedorActualizado);
     Optional<ProveedorDTO> obtenerProveedor(Long nro_documento);
-    List<ProveedorDTO> proveedor ();
+    List<ProveedorDTO> proveedores();
 
+    ProveedorDTO obtenerUnProveedor(Long nro_documento);
+
+    void eliminarRepuestoProveeidos(Long nro_documento);
 }
 

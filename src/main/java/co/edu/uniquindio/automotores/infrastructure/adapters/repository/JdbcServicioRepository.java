@@ -112,19 +112,25 @@ public class JdbcServicioRepository implements IServicioUsesCases {
     }
 
     @Override
-    public List<ServicioDTO> servicio() {
-        List<ServicioDTO> servicio = new ArrayList<>();
+    public List<ServicioDTO> servicios() {
+        List<ServicioDTO> servicios = new ArrayList<>();
         String query = "SELECT * FROM Servicio";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                servicio.add(mapResultSetToServicio(rs));
+                servicios.add(mapResultSetToServicio(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return servicio();
+        return servicios;
+    }
+
+    @Override
+    public ServicioDTO obtenerUnServicio(Long id_servicio){
+        Optional<ServicioDTO> optservicio = obtenerServicio(id_servicio);
+        return optservicio.orElse(null);
     }
 
     private ServicioDTO mapResultSetToServicio(ResultSet rs) throws SQLException {

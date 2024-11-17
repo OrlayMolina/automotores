@@ -72,14 +72,14 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
 
     @Override
     public String actualizarEmpleado(Long nro_documento, EmpleadoDTO empleadoActualizado) {
-        String query = "UPDATE Empleado SET  = ?, nro_documento = ?, tipo_documento = ?, telefono = ?, cargo = ?, " +
+        String query = "UPDATE Empleado SET nro_documento = ?, tipo_documento = ?, telefono = ?, cargo = ?, " +
                 "salario = ?, primer_nombre = ?, segundo_nombre = ? , primer_apellido = ?, segundo_apellido = ? WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosEmpleado(empleadoActualizado, sentencia);
 
-            sentencia.setLong(11, nro_documento);
+            sentencia.setLong(10, nro_documento);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El empleado fue actualizado correctamente.";
@@ -119,7 +119,7 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return empleados();
+        return empleados;
     }
 
     @Override
@@ -147,7 +147,7 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
                 rs.getLong("tipo_documento"),
                 rs.getString("telefono"),
                 rs.getLong("cargo"),
-                0,
+                rs.getFloat("salario"),
                 rs.getString("primer_nombre"),
                 rs.getString("segundo_nombre"),
                 rs.getString("primer_apellido"),

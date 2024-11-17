@@ -42,7 +42,12 @@ public class ServicioServiceImpl implements IServicioUsesCases {
     }
 
     @Override
-    public List<ServicioDTO> servicio() {
-        return servicioRepository.servicio();
+    public List<ServicioDTO> servicios() {
+        return servicioRepository.servicios();
+    }
+
+    @Override
+    public ServicioDTO obtenerUnServicio(Long id_servicio) {
+        return servicioRepository.obtenerUnServicio(id_servicio);
     }
 }

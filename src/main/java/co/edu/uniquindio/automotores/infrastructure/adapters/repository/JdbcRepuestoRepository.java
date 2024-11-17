@@ -1,10 +1,8 @@
 package co.edu.uniquindio.automotores.infrastructure.adapters.repository;
 
-import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
 import co.edu.uniquindio.automotores.application.dto.repuesto.RepuestoDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
-import co.edu.uniquindio.automotores.domain.model.Repuesto;
 import co.edu.uniquindio.automotores.domain.ports.in.repuesto.IRepuestoUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.database.DatabaseConnection;
 import org.springframework.stereotype.Repository;
@@ -29,7 +27,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     @Override
     public String crearRepuesto(RepuestoDTO repuestoDTO) {
 
-        if(obtenerRepuesto(repuestoDTO.codigo_repuesto()).isPresent()){
+        if(obtenerRepuesto(Long.valueOf(repuestoDTO.codigo_repuesto())).isPresent()){
             throw new AlreadyExistsException("El respuesto con numero: " + repuestoDTO.codigo_repuesto() + " ya existe!");
         }
 
@@ -50,7 +48,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
         return "El Repuesto no fue registrado.";
     }
     @Override
-    public String eliminarRepuesto(String codigo_repuesto) {
+    public String eliminarRepuesto(Long codigo_repuesto) {
 
         if(obtenerRepuesto(codigo_repuesto).isEmpty()){
             throw new ResourceNotFoundException("El Repuesto con codigo: " + codigo_repuesto + " no fue encontrado!");
@@ -59,7 +57,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
         String query = "DELETE FROM Repuesto WHERE codigo_repuesto = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, codigo_repuesto);
+            stmt.setLong(1, codigo_repuesto);
             int filasAfectadas = stmt.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Repuesto fue eliminado correctamente.";
@@ -71,7 +69,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     }
 
     @Override
-    public String actualizarRepuesto(String codigo_respuesto, RepuestoDTO repuestoActualizado) {
+    public String actualizarRepuesto(Long codigo_respuesto, RepuestoDTO repuestoActualizado) {
         String query = "UPDATE Repuesto SET  = ?, codigo_respuesto = ?, nombre = ?, descripcion = ?, " +
                 "precio = ?, cantidad = ? WHERE codigo_repuesto = ?";
         try (Connection connection = databaseConnection.getConnection();
@@ -79,7 +77,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
 
             atributosRepuesto(repuestoActualizado, sentencia);
 
-            sentencia.setString(8, codigo_respuesto);
+            sentencia.setLong(8, codigo_respuesto);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Repuesto fue actualizado correctamente.";
@@ -99,11 +97,11 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     }
 
     @Override
-    public Optional<RepuestoDTO> obtenerRepuesto(String codigo_repuesto) {
+    public Optional<RepuestoDTO> obtenerRepuesto(Long codigo_repuesto) {
         String query = "SELECT * FROM Repuesto WHERE codigo_repuesto = ?";
         try(Connection connection = databaseConnection.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, codigo_repuesto);
+            statement.setLong(1, codigo_repuesto);
             ResultSet result = statement.executeQuery();
             if (result.next()){
                 return Optional.of(mapResultSetToRepuesto(result));
@@ -116,19 +114,25 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     }
 
     @Override
-    public List<RepuestoDTO> repuesto() {
-        List<RepuestoDTO> repuesto = new ArrayList<>();
+    public List<RepuestoDTO> repuestos() {
+        List<RepuestoDTO> repuestos = new ArrayList<>();
         String query = "SELECT * FROM Repuesto";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                repuesto.add(mapResultSetToRepuesto(rs));
+                repuestos.add(mapResultSetToRepuesto(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return repuesto();
+        return repuestos;
+    }
+
+    @Override
+    public RepuestoDTO obtenerUnRepuesto(Long nro_documento){
+        Optional<RepuestoDTO> optRepuesto = obtenerRepuesto(nro_documento);
+        return optRepuesto.orElse(null);
     }
 
     private RepuestoDTO mapResultSetToRepuesto(ResultSet rs) throws SQLException {
