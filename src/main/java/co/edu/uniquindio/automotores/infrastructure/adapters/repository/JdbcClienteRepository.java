@@ -93,7 +93,7 @@ public class JdbcClienteRepository implements IClienteUsesCases {
         sentencia.setLong(1, clienteActualizado.nro_documento());
         sentencia.setLong(2, clienteActualizado.tipo_documento());
         sentencia.setString(3, clienteActualizado.correo());
-        sentencia.setString(4, clienteActualizado.teleono());
+        sentencia.setString(4, clienteActualizado.telefono());
         sentencia.setString(5, clienteActualizado.primer_nombre());
         sentencia.setString(6, clienteActualizado.segundo_nombre());
         sentencia.setString(7, clienteActualizado.primer_apellido());
