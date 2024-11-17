@@ -43,4 +43,9 @@ public class EmpleadoServiceImpl implements IEmpleadoUsesCases {
     public List<EmpleadoDTO> empleados() {
         return empleadoRepository.empleados();
     }
+
+    @Override
+    public EmpleadoDTO obtenerUnEmpleado(Long nro_documento) {
+        return empleadoRepository.obtenerUnEmpleado(nro_documento);
+    }
 }

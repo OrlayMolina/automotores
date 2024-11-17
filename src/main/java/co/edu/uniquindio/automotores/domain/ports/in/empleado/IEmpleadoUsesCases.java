@@ -16,4 +16,6 @@ public interface IEmpleadoUsesCases {
     String actualizarEmpleado(Long nro_documento, EmpleadoDTO empleadoActualizado);
     Optional<EmpleadoDTO> obtenerEmpleado(Long nro_documento);
     List<EmpleadoDTO> empleados();
+
+    EmpleadoDTO obtenerUnEmpleado(Long nro_documento);
 }

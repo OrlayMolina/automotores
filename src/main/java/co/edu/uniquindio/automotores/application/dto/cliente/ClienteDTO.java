@@ -4,6 +4,7 @@ public record ClienteDTO(
         Long nro_documento,
         Long tipo_documento,
         String correo,
+        String teleono,
         String primer_nombre,
         String segundo_nombre,
         String primer_apellido,

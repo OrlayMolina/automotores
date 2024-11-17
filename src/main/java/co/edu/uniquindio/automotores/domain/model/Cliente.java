@@ -5,6 +5,7 @@ public class Cliente {
     private Long nro_documento;
     private Long tipo_documento;
     private String correo;
+    private String telefono;
     private String primer_nombre;
     private String segundo_nombre;
     private String primer_apellido;
@@ -16,6 +17,7 @@ public class Cliente {
             Long nro_documento,
             Long tipo_documento,
             String correo,
+            String telefono,
             String primer_nombre,
             String segundo_nombre,
             String primer_apellido,
@@ -23,6 +25,7 @@ public class Cliente {
         this.nro_documento = nro_documento;
         this.tipo_documento = tipo_documento;
         this.correo = correo;
+        this.telefono = telefono;
         this.primer_nombre = primer_nombre;
         this.segundo_nombre = segundo_nombre;
         this.primer_apellido = primer_apellido;
@@ -83,5 +86,13 @@ public class Cliente {
 
     public void setSegundo_apellido(String segundo_apellido) {
         this.segundo_apellido = segundo_apellido;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }

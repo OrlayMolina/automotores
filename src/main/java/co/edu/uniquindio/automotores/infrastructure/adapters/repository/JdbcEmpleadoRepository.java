@@ -1,6 +1,5 @@
 package co.edu.uniquindio.automotores.infrastructure.adapters.repository;
 
-import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
 import co.edu.uniquindio.automotores.application.dto.empleado.EmpleadoDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
@@ -28,9 +27,9 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
         if( obtenerEmpleado( empleadoDTO.nro_documento()).isPresent()){
             throw new AlreadyExistsException("El empleado con el documento " + empleadoDTO.nro_documento() + " ya existe!");
         }
-        String query = "INSERT INTO empleado (nro_documento, tipo_documento, cargo, salario, " +
+        String query = "INSERT INTO empleado (nro_documento, tipo_documento, telefono, cargo, salario, " +
                 "primer_nombre, segundo_nombre, primer_apellido, segundo_apellido)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
@@ -38,7 +37,7 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
 
             sentencia.executeUpdate();
 
-            return "El Cliente fue creado correctamente.";
+            return "El Empleado fue creado correctamente.";
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,14 +72,14 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
 
     @Override
     public String actualizarEmpleado(Long nro_documento, EmpleadoDTO empleadoActualizado) {
-        String query = "UPDATE Empleado SET  = ?, nro_documento = ?, tipo_documento = ?, cargo = ?, " +
-                "salario = ?, primer_nombre = ?, segundo_nombre = ? , primer_apellido = ?, segundo_apellido = ?WHERE nro_documento = ?";
+        String query = "UPDATE Empleado SET  = ?, nro_documento = ?, tipo_documento = ?, telefono = ?, cargo = ?, " +
+                "salario = ?, primer_nombre = ?, segundo_nombre = ? , primer_apellido = ?, segundo_apellido = ? WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosEmpleado(empleadoActualizado, sentencia);
 
-            sentencia.setLong(8, nro_documento);
+            sentencia.setLong(11, nro_documento);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El empleado fue actualizado correctamente.";
@@ -123,15 +122,22 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
         return empleados();
     }
 
+    @Override
+    public EmpleadoDTO obtenerUnEmpleado(Long nro_documento){
+        Optional<EmpleadoDTO> optEmpleado = obtenerEmpleado(nro_documento);
+        return optEmpleado.orElse(null);
+    }
+
     private void atributosEmpleado(EmpleadoDTO empleadoActualizado, PreparedStatement sentencia) throws SQLException {
         sentencia.setLong(1, empleadoActualizado.nro_documento());
         sentencia.setLong(2, empleadoActualizado.tipo_documento());
-        sentencia.setLong(3, empleadoActualizado.cargo());
-        sentencia.setFloat(4, empleadoActualizado.salario());
-        sentencia.setString(5, empleadoActualizado.primer_nombre());
-        sentencia.setString(6, empleadoActualizado.segundo_nombre());
-        sentencia.setString(7, empleadoActualizado.primer_apellido());
-        sentencia.setString(8, empleadoActualizado.segundo_apellido());
+        sentencia.setString(3, empleadoActualizado.telefono());
+        sentencia.setLong(4, empleadoActualizado.cargo());
+        sentencia.setFloat(5, empleadoActualizado.salario());
+        sentencia.setString(6, empleadoActualizado.primer_nombre());
+        sentencia.setString(7, empleadoActualizado.segundo_nombre());
+        sentencia.setString(8, empleadoActualizado.primer_apellido());
+        sentencia.setString(9, empleadoActualizado.segundo_apellido());
     }
 
     private EmpleadoDTO mapResultSetToEmpleado(ResultSet rs) throws SQLException {
@@ -139,6 +145,7 @@ public class JdbcEmpleadoRepository implements IEmpleadoUsesCases {
         return new EmpleadoDTO(
                 rs.getLong("nro_documento"),
                 rs.getLong("tipo_documento"),
+                rs.getString("telefono"),
                 rs.getLong("cargo"),
                 0,
                 rs.getString("primer_nombre"),

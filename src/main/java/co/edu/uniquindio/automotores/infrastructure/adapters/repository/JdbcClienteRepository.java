@@ -32,8 +32,8 @@ public class JdbcClienteRepository implements IClienteUsesCases {
         }
 
         String query = "INSERT INTO Cliente (nro_documento, tipo_documento, correo, " +
-                "primer_nombre, segundo_nombre, primer_apellido, segundo_apellido)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "telefono, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
@@ -55,8 +55,6 @@ public class JdbcClienteRepository implements IClienteUsesCases {
             throw new ResourceNotFoundException("El Cliente con nro de documento " + nro_documento + " no fue encontrado!");
         }
 
-        eliminarTelefonosCliente(nro_documento);
-
         String query = "DELETE FROM Cliente WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -72,28 +70,15 @@ public class JdbcClienteRepository implements IClienteUsesCases {
     }
 
     @Override
-    public void eliminarTelefonosCliente(Long nro_documento){
-        String deleteTelefonoQuery = "DELETE FROM telefono_cliente WHERE cliente = ?";
-        try (Connection connection = databaseConnection.getConnection();
-             PreparedStatement stmtTelefono = connection.prepareStatement(deleteTelefonoQuery)) {
-
-            stmtTelefono.setLong(1, nro_documento);
-            stmtTelefono.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public String actualizarCliente(Long id, ClienteDTO clienteActualizado) {
-        String query = "UPDATE Cliente SET nro_documento = ?, tipo_documento = ?, correo = ?, primer_nombre = ?, " +
+        String query = "UPDATE Cliente SET nro_documento = ?, tipo_documento = ?, correo = ?, telefono = ?, primer_nombre = ?, " +
                 "segundo_nombre = ?, primer_apellido = ?, segundo_apellido = ? WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosCliente(clienteActualizado, sentencia);
 
-            sentencia.setLong(8, id);
+            sentencia.setLong(9, id);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El cliente fue actualizado correctamente.";
@@ -108,10 +93,11 @@ public class JdbcClienteRepository implements IClienteUsesCases {
         sentencia.setLong(1, clienteActualizado.nro_documento());
         sentencia.setLong(2, clienteActualizado.tipo_documento());
         sentencia.setString(3, clienteActualizado.correo());
-        sentencia.setString(4, clienteActualizado.primer_nombre());
-        sentencia.setString(5, clienteActualizado.segundo_nombre());
-        sentencia.setString(6, clienteActualizado.primer_apellido());
-        sentencia.setString(7, clienteActualizado.segundo_apellido());
+        sentencia.setString(4, clienteActualizado.teleono());
+        sentencia.setString(5, clienteActualizado.primer_nombre());
+        sentencia.setString(6, clienteActualizado.segundo_nombre());
+        sentencia.setString(7, clienteActualizado.primer_apellido());
+        sentencia.setString(8, clienteActualizado.segundo_apellido());
     }
 
     @Override
@@ -159,6 +145,7 @@ public class JdbcClienteRepository implements IClienteUsesCases {
                 rs.getLong("nro_documento"),
                 rs.getLong("tipo_documento"),
                 rs.getString("correo"),
+                rs.getString("telefono"),
                 rs.getString("primer_nombre"),
                 rs.getString("segundo_nombre"),
                 rs.getString("primer_apellido"),

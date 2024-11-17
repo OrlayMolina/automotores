@@ -3,6 +3,7 @@ package co.edu.uniquindio.automotores.application.dto.empleado;
 public record EmpleadoDTO(
         Long nro_documento,
         Long tipo_documento,
+        String telefono,
         Long cargo,
         float salario,
         String primer_nombre,

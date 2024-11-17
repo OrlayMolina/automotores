@@ -34,9 +34,9 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
             throw new AlreadyExistsException("El proveedor con numero de indectificacion: " + proveedorDTO.nro_documento() + " ya existe!");
         }
 
-        String query = "INSERT INTO Proveedor (nro_documento, tipo_documento, correo, " +
+        String query = "INSERT INTO Proveedor (nro_documento, tipo_documento, telefono, correo, " +
                 "nombre, razon_social)" +
-                " VALUES (?, ?, ?, ?, ?)";
+                " VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
@@ -73,7 +73,7 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
 
     @Override
     public String actualizarProveedor(Long nro_documento, ProveedorDTO proveedorActualizado) {
-        String query = "UPDATE Proveedor SET  = ?, nro_documento = ?, tipo_documento = ?, correo = ?, " +
+        String query = "UPDATE Proveedor SET  = ?, nro_documento = ?, tipo_documento = ?, telefono = ?, correo = ?, " +
                 "nombre = ?, razon_social = ? WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
@@ -94,9 +94,10 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
     private void atributosProveedor(ProveedorDTO proveedorActualizado, PreparedStatement sentencia) throws SQLException {
         sentencia.setLong(1, proveedorActualizado.nro_documento());
         sentencia.setLong(2, proveedorActualizado.tipo_documento());
-        sentencia.setString(3, proveedorActualizado.correo());
-        sentencia.setString(4, proveedorActualizado.nombre());
-        sentencia.setString(5, proveedorActualizado.razon_social());
+        sentencia.setString(3, proveedorActualizado.telefono());
+        sentencia.setString(4, proveedorActualizado.correo());
+        sentencia.setString(5, proveedorActualizado.nombre());
+        sentencia.setString(6, proveedorActualizado.razon_social());
     }
 
     @Override
@@ -137,6 +138,7 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
         return new ProveedorDTO(
                 rs.getLong("nro_documento"),
                 rs.getLong("tipo_documento"),
+                rs.getString("telefono"),
                 rs.getString("correo"),
                 rs.getString("nombre"),
                 rs.getString("razon_social"));

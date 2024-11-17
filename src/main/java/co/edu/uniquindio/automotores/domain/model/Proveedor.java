@@ -3,6 +3,7 @@ package co.edu.uniquindio.automotores.domain.model;
 public class Proveedor {
     private Long nro_documento;
     private Long tipo_documento;
+    private String telefono;
     private String correo;
     private String nombre;
     private String razon_social;
