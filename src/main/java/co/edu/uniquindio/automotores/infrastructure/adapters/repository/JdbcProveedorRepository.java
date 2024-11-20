@@ -72,14 +72,14 @@ public class JdbcProveedorRepository implements IProveedorUsesCases {
 
     @Override
     public String actualizarProveedor(Long nro_documento, ProveedorDTO proveedorActualizado) {
-        String query = "UPDATE Proveedor SET  = ?, nro_documento = ?, tipo_documento = ?, telefono = ?, correo = ?, " +
+        String query = "UPDATE Proveedor SET nro_documento = ?, tipo_documento = ?, telefono = ?, correo = ?, " +
                 "nombre = ?, razon_social = ? WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosProveedor(proveedorActualizado, sentencia);
 
-            sentencia.setLong(8, nro_documento);
+            sentencia.setLong(7, nro_documento);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Proveedor fue actualizado correctamente.";

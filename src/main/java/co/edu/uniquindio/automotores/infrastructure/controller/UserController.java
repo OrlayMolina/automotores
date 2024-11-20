@@ -145,9 +145,9 @@ public class UserController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, proveedores));
     }
 
-    @GetMapping("/proveedores/proveedor/{id}")
-    public ResponseEntity<MensajeDTO<ProveedorDTO>> obtenerProveedor(@PathVariable String id) {
-        ProveedorDTO proveedor = proveedorService.obtenerUnProveedor(Long.valueOf(id));
+    @GetMapping("/proveedores/proveedor/{nro_documento}")
+    public ResponseEntity<MensajeDTO<ProveedorDTO>> obtenerProveedor(@PathVariable String nro_documento) {
+        ProveedorDTO proveedor = proveedorService.obtenerUnProveedor(Long.valueOf(nro_documento));
         return ResponseEntity.ok().body(new MensajeDTO<>(false, proveedor));
     }
 
