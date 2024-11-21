@@ -70,13 +70,13 @@ public class JdbcVehiculoRepository implements IVehiculoUsesCases {
     @Override
     public String actualizarVehiculo(String nro_placa, VehiculoDTO vehiculoActualizado) {
         String query = "UPDATE Vehiculo SET nro_placa = ?, tipo_vehiculo = ?, marca = ?, " +
-                "modelo = ?, anio_modelo = ?, nro_motor = ? WHERE nro_placa = ?";
+                "modelo = ?, anio_modelo = ?, nro_motor = ?, cliente = ? WHERE nro_placa = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosVehiculo(vehiculoActualizado, sentencia);
 
-            sentencia.setString(7, nro_placa);
+            sentencia.setString(8, nro_placa);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Vehiculo fue actualizado correctamente.";
@@ -94,6 +94,7 @@ public class JdbcVehiculoRepository implements IVehiculoUsesCases {
         sentencia.setString(4,  vehiculoActualizado.modelo());
         sentencia.setString(5,  vehiculoActualizado.anio_modelo());
         sentencia.setString(6,  vehiculoActualizado.nro_motor());
+        sentencia.setLong(7,  vehiculoActualizado.cliente());
     }
 
     @Override
