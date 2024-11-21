@@ -6,7 +6,8 @@ public record VehiculoDTO(
     String marca,
     String modelo,
     String anio_modelo,
-    String nro_motor){
+    String nro_motor,
+    Long cliente){
 
 }
 

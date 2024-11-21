@@ -53,4 +53,9 @@ public class ClienteServiceImpl implements IClienteUsesCases {
     public List<ClienteDTO> clientes() {
         return clienteRepository.clientes();
     }
+
+    @Override
+    public void eliminarVehiculo(Long nro_documento) {
+        clienteRepository.eliminarVehiculo(nro_documento);
+    }
 }

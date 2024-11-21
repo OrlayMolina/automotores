@@ -15,4 +15,6 @@ public interface IClienteUsesCases {
     ClienteDTO obtenerUnCliente(Long nro_documento);
 
     List<ClienteDTO> clientes();
+
+    void eliminarVehiculo(Long nro_documento);
 }

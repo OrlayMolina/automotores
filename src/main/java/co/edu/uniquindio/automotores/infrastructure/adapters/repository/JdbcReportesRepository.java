@@ -19,8 +19,6 @@ public class JdbcReportesRepository {
         this.databaseConnection = databaseConnection;
     }
 
-    // Reportes Simples
-
     /**
      * Reporte 1: Listar todos los clientes con su nombre completo y correo.
      */

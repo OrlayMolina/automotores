@@ -55,6 +55,8 @@ public class JdbcClienteRepository implements IClienteUsesCases {
             throw new ResourceNotFoundException("El Cliente con nro de documento " + nro_documento + " no fue encontrado!");
         }
 
+        eliminarVehiculo(nro_documento);
+
         String query = "DELETE FROM Cliente WHERE nro_documento = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -137,6 +139,18 @@ public class JdbcClienteRepository implements IClienteUsesCases {
             e.printStackTrace();
         }
         return clientes;
+    }
+
+    @Override
+    public void eliminarVehiculo(Long nro_documento){
+        String deleteRepuestosQuery = "DELETE FROM vehiculo WHERE cliente = ?";
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement stmtRepuesto = connection.prepareStatement(deleteRepuestosQuery)) {
+            stmtRepuesto.setLong(1, nro_documento);
+            stmtRepuesto.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private ClienteDTO mapResultSetToCliente(ResultSet rs) throws SQLException {

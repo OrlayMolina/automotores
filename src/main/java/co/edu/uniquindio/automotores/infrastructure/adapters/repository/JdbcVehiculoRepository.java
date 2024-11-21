@@ -143,7 +143,9 @@ public class JdbcVehiculoRepository implements IVehiculoUsesCases {
                 rs.getString("marca"),
                 rs.getString("modelo"),
                 rs.getString("anio_modelo"),
-                rs.getString("nro_motor"));
+                rs.getString("nro_motor"),
+                rs.getLong("cliente")
+        );
     }
 }
 
