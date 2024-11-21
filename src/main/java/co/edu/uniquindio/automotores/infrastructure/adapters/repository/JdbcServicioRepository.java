@@ -24,13 +24,11 @@ public class JdbcServicioRepository implements IServicioUsesCases {
 
     @Override
     public String crearServicio(ServicioDTO servicioDTO) {
-
-        if(obtenerServicio(servicioDTO.id_servicio()).isPresent()){
+        if (obtenerServicio(servicioDTO.id_servicio()).isPresent()) {
             throw new AlreadyExistsException("El servicio con numero: " + servicioDTO.id_servicio() + " ya existe!");
         }
 
-        String query = "INSERT INTO Servicio (id_Servicio, nombre, descripcion_servicio, " +
-                "precio, servicio_asociado)" +
+        String query = "INSERT INTO Servicio (id_servicio, nombre, descripcion_servicio, precio, servicio_asociado)" +
                 " VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
@@ -45,6 +43,7 @@ public class JdbcServicioRepository implements IServicioUsesCases {
 
         return "El Servicio no fue registrado.";
     }
+
     @Override
     public String eliminarServicio(Long id_servicio) {
 
@@ -68,14 +67,14 @@ public class JdbcServicioRepository implements IServicioUsesCases {
 
     @Override
     public String actualizarServicio(Long id_servicio, ServicioDTO servicioActualizado) {
-        String query = "UPDATE Servicio SET  = ?, id_servicio = ?, nombre = ?, descripcion_servicio = ?, " +
+        String query = "UPDATE Servicio SET id_servicio = ?, nombre = ?, descripcion_servicio = ?, " +
                 "precio = ?, servicio_asociado = ? WHERE id_servicio = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosServicio(servicioActualizado, sentencia);
 
-            sentencia.setLong(8,id_servicio);
+            sentencia.setLong(6,id_servicio);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Servicio fue actualizado correctamente.";
@@ -108,7 +107,11 @@ public class JdbcServicioRepository implements IServicioUsesCases {
         sentencia.setString(2, servicioActualizado.nombre());
         sentencia.setString(3, servicioActualizado.descripcion_servicio());
         sentencia.setFloat(4,servicioActualizado.precio());
-        sentencia.setLong(5, servicioActualizado.servicio_asociado());
+        if (servicioActualizado.servicio_asociado() != null) {
+            sentencia.setLong(5, servicioActualizado.servicio_asociado());
+        } else {
+            sentencia.setNull(5, java.sql.Types.BIGINT);
+        }
     }
 
     @Override
@@ -140,7 +143,8 @@ public class JdbcServicioRepository implements IServicioUsesCases {
                 rs.getString("nombre"),
                 rs.getString("descripcion_servicio"),
                 rs.getFloat("precio"),
-                rs.getLong("servicio_asociado"));
+                rs.getObject("servicio_asociado") != null ? rs.getLong("servicio_asociado") : null
+        );
     }
 }
 

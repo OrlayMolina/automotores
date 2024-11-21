@@ -70,14 +70,14 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
 
     @Override
     public String actualizarRepuesto(Long codigo_respuesto, RepuestoDTO repuestoActualizado) {
-        String query = "UPDATE Repuesto SET  = ?, codigo_respuesto = ?, nombre = ?, descripcion = ?, " +
+        String query = "UPDATE Repuesto SET codigo_repuesto = ?, nombre = ?, descripcion = ?, " +
                 "precio = ?, cantidad = ? WHERE codigo_repuesto = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosRepuesto(repuestoActualizado, sentencia);
 
-            sentencia.setLong(8, codigo_respuesto);
+            sentencia.setLong(6, codigo_respuesto);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Repuesto fue actualizado correctamente.";

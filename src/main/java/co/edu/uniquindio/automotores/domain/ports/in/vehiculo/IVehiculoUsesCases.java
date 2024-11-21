@@ -16,4 +16,5 @@ public interface IVehiculoUsesCases {
     Optional<VehiculoDTO> obtenerVehiculo(String  nro_placa);
     List<VehiculoDTO> vehiculo();
 
+    VehiculoDTO obtenerUnVehiculo(String nro_placa);
 }

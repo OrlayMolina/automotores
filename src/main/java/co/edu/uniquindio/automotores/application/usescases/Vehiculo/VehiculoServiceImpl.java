@@ -1,14 +1,10 @@
-package co.edu.uniquindio.automotores.application.usescases.Vehiculo;
+package co.edu.uniquindio.automotores.application.usescases.vehiculo;
 
-import co.edu.uniquindio.automotores.application.dto.repuesto.RepuestoDTO;
 import co.edu.uniquindio.automotores.application.dto.vehiculo.VehiculoDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
-import co.edu.uniquindio.automotores.domain.ports.in.repuesto.IRepuestoUsesCases;
 import co.edu.uniquindio.automotores.domain.ports.in.vehiculo.IVehiculoUsesCases;
-import co.edu.uniquindio.automotores.infrastructure.adapters.repository.JdbcRepuestoRepository;
 import co.edu.uniquindio.automotores.infrastructure.adapters.repository.JdbcVehiculoRepository;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +44,10 @@ public class VehiculoServiceImpl implements IVehiculoUsesCases {
     @Override
     public List<VehiculoDTO> vehiculo() {
         return vehiculoRepository.vehiculo();
+    }
+
+    @Override
+    public VehiculoDTO obtenerUnVehiculo(String nro_placa) {
+        return vehiculoRepository.obtenerUnVehiculo(nro_placa);
     }
 }

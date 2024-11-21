@@ -1,13 +1,9 @@
 package co.edu.uniquindio.automotores.infrastructure.adapters.repository;
 
 
-import co.edu.uniquindio.automotores.application.dto.cliente.ClienteDTO;
-import co.edu.uniquindio.automotores.application.dto.empleado.EmpleadoDTO;
 import co.edu.uniquindio.automotores.application.dto.vehiculo.VehiculoDTO;
 import co.edu.uniquindio.automotores.domain.exceptions.AlreadyExistsException;
 import co.edu.uniquindio.automotores.domain.exceptions.ResourceNotFoundException;
-import co.edu.uniquindio.automotores.domain.ports.in.cliente.IClienteUsesCases;
-import co.edu.uniquindio.automotores.domain.ports.in.empleado.IEmpleadoUsesCases;
 import co.edu.uniquindio.automotores.domain.ports.in.vehiculo.IVehiculoUsesCases;
 import co.edu.uniquindio.automotores.infrastructure.adapters.database.DatabaseConnection;
 import lombok.RequiredArgsConstructor;
@@ -73,14 +69,14 @@ public class JdbcVehiculoRepository implements IVehiculoUsesCases {
 
     @Override
     public String actualizarVehiculo(String nro_placa, VehiculoDTO vehiculoActualizado) {
-        String query = "UPDATE Vehiculo SET  = ?, nro_Placa = ?, tipo_vehiculo = ?, marca = ?, " +
+        String query = "UPDATE Vehiculo SET nro_placa = ?, tipo_vehiculo = ?, marca = ?, " +
                 "modelo = ?, anio_modelo = ?, nro_motor = ? WHERE nro_placa = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosVehiculo(vehiculoActualizado, sentencia);
 
-            sentencia.setString(8, nro_placa);
+            sentencia.setString(7, nro_placa);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Vehiculo fue actualizado correctamente.";
@@ -130,7 +126,13 @@ public class JdbcVehiculoRepository implements IVehiculoUsesCases {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return vehiculo();
+        return vehiculo;
+    }
+
+    @Override
+    public VehiculoDTO obtenerUnVehiculo(String nro_placa){
+        Optional<VehiculoDTO> optionalVehiculo = obtenerVehiculo(nro_placa);
+        return optionalVehiculo.orElse(null);
     }
 
     private VehiculoDTO mapResultSetToVehiculo(ResultSet rs) throws SQLException {
