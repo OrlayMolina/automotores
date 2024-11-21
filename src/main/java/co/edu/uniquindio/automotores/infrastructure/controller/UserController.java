@@ -183,7 +183,7 @@ public class UserController {
     @DeleteMapping("/repuestos/eliminar-repuesto/{id}")
     public ResponseEntity<MensajeDTO<String>> eliminarRepuesto(@PathVariable String id) {
         try {
-            String mensaje = repuestoService.eliminarRepuesto(Long.valueOf(id));
+            String mensaje = repuestoService.eliminarRepuesto(id);
             return ResponseEntity.ok(new MensajeDTO<>(false, mensaje));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new MensajeDTO<>(true, e.getMessage()));
@@ -198,14 +198,14 @@ public class UserController {
 
     @GetMapping("/repuestos/repuesto/{id}")
     public ResponseEntity<MensajeDTO<RepuestoDTO>> obtenerRepuesto(@PathVariable String id) {
-        RepuestoDTO repuesto = repuestoService.obtenerUnRepuesto(Long.valueOf(id));
+        RepuestoDTO repuesto = repuestoService.obtenerUnRepuesto(id);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, repuesto));
     }
 
     @PostMapping("/repuestos/actualizar-repuesto/{id}")
     public ResponseEntity<MensajeDTO<String>> actualizarRepuesto(@PathVariable String id, @RequestBody RepuestoDTO repuesto) {
         try {
-            repuestoService.actualizarRepuesto(Long.valueOf(id), repuesto);
+            repuestoService.actualizarRepuesto(id, repuesto);
             return ResponseEntity.ok(new MensajeDTO<>(false, "Repuesto actualizado exitosamente"));
         } catch (AlreadyExistsException e) {
             return ResponseEntity.status(CONFLICT).body(new MensajeDTO<>(true, e.getMessage()));

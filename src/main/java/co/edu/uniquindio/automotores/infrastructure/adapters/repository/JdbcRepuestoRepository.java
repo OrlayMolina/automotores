@@ -27,11 +27,11 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     @Override
     public String crearRepuesto(RepuestoDTO repuestoDTO) {
 
-        if(obtenerRepuesto(Long.valueOf(repuestoDTO.codigo_repuesto())).isPresent()){
+        if(obtenerRepuesto(repuestoDTO.codigo_repuesto()).isPresent()){
             throw new AlreadyExistsException("El respuesto con numero: " + repuestoDTO.codigo_repuesto() + " ya existe!");
         }
 
-        String query = "INSERT INTO Repuesto (codigo_respuesto, nombre, descripcion, " +
+        String query = "INSERT INTO Repuesto (codigo_repuesto, nombre, descripcion, " +
                 "precio, cantidad, proveedor)" +
                 " VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
@@ -48,7 +48,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
         return "El Repuesto no fue registrado.";
     }
     @Override
-    public String eliminarRepuesto(Long codigo_repuesto) {
+    public String eliminarRepuesto(String codigo_repuesto) {
 
         if(obtenerRepuesto(codigo_repuesto).isEmpty()){
             throw new ResourceNotFoundException("El Repuesto con codigo: " + codigo_repuesto + " no fue encontrado!");
@@ -57,7 +57,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
         String query = "DELETE FROM Repuesto WHERE codigo_repuesto = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setLong(1, codigo_repuesto);
+            stmt.setString(1, codigo_repuesto);
             int filasAfectadas = stmt.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Repuesto fue eliminado correctamente.";
@@ -69,7 +69,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     }
 
     @Override
-    public String actualizarRepuesto(Long codigo_respuesto, RepuestoDTO repuestoActualizado) {
+    public String actualizarRepuesto(String codigo_respuesto, RepuestoDTO repuestoActualizado) {
         String query = "UPDATE Repuesto SET codigo_repuesto = ?, nombre = ?, descripcion = ?, " +
                 "precio = ?, cantidad = ?, proveedor = ? WHERE codigo_repuesto = ?";
         try (Connection connection = databaseConnection.getConnection();
@@ -77,7 +77,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
 
             atributosRepuesto(repuestoActualizado, sentencia);
 
-            sentencia.setLong(7, codigo_respuesto);
+            sentencia.setString(7, codigo_respuesto);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Repuesto fue actualizado correctamente.";
@@ -98,11 +98,11 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     }
 
     @Override
-    public Optional<RepuestoDTO> obtenerRepuesto(Long codigo_repuesto) {
+    public Optional<RepuestoDTO> obtenerRepuesto(String codigo_repuesto) {
         String query = "SELECT * FROM Repuesto WHERE codigo_repuesto = ?";
         try(Connection connection = databaseConnection.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, codigo_repuesto);
+            statement.setString(1, codigo_repuesto);
             ResultSet result = statement.executeQuery();
             if (result.next()){
                 return Optional.of(mapResultSetToRepuesto(result));
@@ -131,7 +131,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     }
 
     @Override
-    public RepuestoDTO obtenerUnRepuesto(Long nro_documento){
+    public RepuestoDTO obtenerUnRepuesto(String nro_documento){
         Optional<RepuestoDTO> optRepuesto = obtenerRepuesto(nro_documento);
         return optRepuesto.orElse(null);
     }
@@ -144,8 +144,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
                 rs.getString("descripcion"),
                 rs.getFloat("precio"),
                 rs.getInt("cantidad"),
-                rs.getLong("proveedor")
-        );
+                rs.getLong("proveedor"));
             }
 }
 

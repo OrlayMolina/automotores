@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface IRepuestoUsesCases {
     String crearRepuesto(RepuestoDTO repuestoDTO);
-    String eliminarRepuesto( Long codigo_repuesto);
+    String eliminarRepuesto( String codigo_repuesto);
 
-    String actualizarRepuesto( Long codigo_repuesto, RepuestoDTO repuestoActualizado);
-    Optional<RepuestoDTO> obtenerRepuesto(Long codigo_repuesto);
+    String actualizarRepuesto( String codigo_repuesto, RepuestoDTO repuestoActualizado);
+    Optional<RepuestoDTO> obtenerRepuesto(String codigo_repuesto);
     List<RepuestoDTO> repuestos();
 
-    RepuestoDTO obtenerUnRepuesto(Long nro_documento);
+    RepuestoDTO obtenerUnRepuesto(String nro_documento);
 }

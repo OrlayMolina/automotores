@@ -20,7 +20,7 @@ public class RepuestoServiceImpl implements IRepuestoUsesCases {
     @Override
     public String crearRepuesto(RepuestoDTO repuesto) {
 
-        if( obtenerRepuesto(Long.valueOf(repuesto.codigo_repuesto())).isPresent() ){
+        if( obtenerRepuesto(repuesto.codigo_repuesto()).isPresent() ){
             throw new AlreadyExistsException( "El repuesto con codigo de repuesto " + repuesto.codigo_repuesto() + " ya existe!");
         }
 
@@ -28,17 +28,17 @@ public class RepuestoServiceImpl implements IRepuestoUsesCases {
     }
 
     @Override
-    public String eliminarRepuesto(Long codigo_repuesto) {
+    public String eliminarRepuesto(String codigo_repuesto) {
         return repuestoRepository.eliminarRepuesto(codigo_repuesto);
     }
 
     @Override
-    public String actualizarRepuesto(Long codido_repuesto, RepuestoDTO repuestoActualizado) {
+    public String actualizarRepuesto(String codido_repuesto, RepuestoDTO repuestoActualizado) {
         return repuestoRepository.actualizarRepuesto(codido_repuesto, repuestoActualizado);
     }
 
     @Override
-    public Optional<RepuestoDTO> obtenerRepuesto(Long codigo_repuesto) {
+    public Optional<RepuestoDTO> obtenerRepuesto(String codigo_repuesto) {
         return repuestoRepository.obtenerRepuesto(codigo_repuesto);
     }
 
@@ -48,7 +48,7 @@ public class RepuestoServiceImpl implements IRepuestoUsesCases {
     }
 
     @Override
-    public RepuestoDTO obtenerUnRepuesto(Long nro_documento) {
+    public RepuestoDTO obtenerUnRepuesto(String nro_documento) {
         return repuestoRepository.obtenerUnRepuesto(nro_documento);
     }
 }
