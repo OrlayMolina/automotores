@@ -29,8 +29,8 @@ public class JdbcVehiculoRepository implements IVehiculoUsesCases {
             throw new AlreadyExistsException("El vehiculo identificado con placa No: " + vehiculoDTO.nro_placa() + " ya existe!");
         }
         String query = "INSERT INTO vehiculo (nro_placa, tipo_vehiculo, marca, modelo, " +
-                "anio_modelo, nro_motor)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "anio_modelo, nro_motor, cliente)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
