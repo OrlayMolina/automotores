@@ -32,8 +32,8 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
         }
 
         String query = "INSERT INTO Repuesto (codigo_respuesto, nombre, descripcion, " +
-                "precio, cantidad)" +
-                " VALUES (?, ?, ?, ?, ?)";
+                "precio, cantidad, proveedor)" +
+                " VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
@@ -71,13 +71,13 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
     @Override
     public String actualizarRepuesto(Long codigo_respuesto, RepuestoDTO repuestoActualizado) {
         String query = "UPDATE Repuesto SET codigo_repuesto = ?, nombre = ?, descripcion = ?, " +
-                "precio = ?, cantidad = ? WHERE codigo_repuesto = ?";
+                "precio = ?, cantidad = ?, proveedor = ? WHERE codigo_repuesto = ?";
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement sentencia = connection.prepareStatement(query)) {
 
             atributosRepuesto(repuestoActualizado, sentencia);
 
-            sentencia.setLong(6, codigo_respuesto);
+            sentencia.setLong(7, codigo_respuesto);
             int filasAfectadas = sentencia.executeUpdate();
             if(filasAfectadas > 0){
                 return "El Repuesto fue actualizado correctamente.";
@@ -94,6 +94,7 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
         sentencia.setString(3, repuestoActualizado.descripcion());
         sentencia.setFloat(4, repuestoActualizado.precio());
         sentencia.setInt(5, repuestoActualizado.cantidad());
+        sentencia.setLong(6, repuestoActualizado.proveedor());
     }
 
     @Override
@@ -142,7 +143,9 @@ public class JdbcRepuestoRepository implements IRepuestoUsesCases {
                 rs.getString("nombre"),
                 rs.getString("descripcion"),
                 rs.getFloat("precio"),
-                rs.getInt("cantidad"));
+                rs.getInt("cantidad"),
+                rs.getLong("proveedor")
+        );
             }
 }
 

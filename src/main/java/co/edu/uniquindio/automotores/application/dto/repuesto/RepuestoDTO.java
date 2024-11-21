@@ -7,7 +7,8 @@ public record RepuestoDTO(
         String nombre,
         String descripcion,
         float precio,
-        int cantidad) {
+        int cantidad,
+        Long proveedor) {
 
 
 }
